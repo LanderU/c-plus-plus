@@ -10,7 +10,7 @@ void MostradResutados(int, int, int, int);
 
 int main () {
 
-	char charIntroducido [20];
+	char charIntroducido [1000];
 	int contador = 0;
 	int numLetras = 0;
 	int numPuntos = 0;
