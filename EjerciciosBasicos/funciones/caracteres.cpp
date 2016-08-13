@@ -17,10 +17,10 @@ int main () {
 	int numExclamacion = 0;
 	int numInterrogacion = 0;
 
-	cout << "Introduzca el texto a evaluar: ";
+	cout << "Introduzca el texto a evaluar(sin espacios): ";
 	cin >> charIntroducido;
 
-	while (charIntroducido[contador] != '\0' ){
+	while (charIntroducido[contador] != '\0'){
 
 		Conteo(charIntroducido[contador], numLetras, numPuntos, numInterrogacion, numExclamacion);
 
