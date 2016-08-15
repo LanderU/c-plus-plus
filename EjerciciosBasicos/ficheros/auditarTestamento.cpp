@@ -50,6 +50,8 @@ int main() {
 		// Llamamos a la función para guardar los datos en el fichero
 		ImprimirTabla(tabla, mayusculas, minusculas, espacios, signosPuntuacion, resto);
 
+		cout << "Proceso terminado, vea el archivo para obtener los datos." << endl;
+
 		// Cerramos los flujos
 		texto.close();
 		tabla.close();
