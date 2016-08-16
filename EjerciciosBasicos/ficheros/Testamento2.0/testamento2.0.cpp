@@ -7,13 +7,13 @@
 using namespace std;
 
 //Enumeración
-enum Tipos {MAYUSCULAS, MINUSCULAS, DIGITO, OTROS, EOS, EOW, IGNORAR};
+enum Tipos {MAYUSCULAS, MINUSCULAS, OTROS, EOS, EOW, IGNORAR};
 
 //Firma funciones
 void AbrirFicheros(ifstream&, ofstream&);
 Tipos Decodificar(char caracter);
-void AuditarCaracter(char, int&, int&, int&, int&, int&, int&);
-void CrearTabla(ofstream& tabla, int, int, int, int, int, int);
+void AuditarCaracter(char, int&, int&, int&, int&, int&);
+void CrearTabla(ofstream& tabla, int, int, int, int, int);
 void Error();
 void Stisfactorio();
 
@@ -26,7 +26,6 @@ int main(){
 	// Contadores
 	int mayusculas = 0;
 	int minusculas = 0;
-	int digitos = 0;
 	int palabras = 0;
 	int sentencias = 0;
 	int ignorado = 0;
@@ -44,12 +43,12 @@ int main(){
 
 		do {
 
-			AuditarCaracter(caracter, mayusculas, minusculas, digitos, palabras, sentencias, ignorado);
+			AuditarCaracter(caracter, mayusculas, minusculas, palabras, sentencias, ignorado);
 			texto.get(caracter);
 
 		}while(texto);
 
-		CrearTabla(tabla, mayusculas, minusculas, digitos, palabras, sentencias, ignorado);
+		CrearTabla(tabla, mayusculas, minusculas, palabras, sentencias, ignorado);
 
 		Stisfactorio();
 		
@@ -114,7 +113,7 @@ Tipos Decodificar(char caracter){
 
 }//end Decodificar
 
-void AuditarCaracter(char caracter, int& mayusculas, int& minusculas, int& digitos, int& palabras, int& sentencias, int& ignorado){
+void AuditarCaracter(char caracter, int& mayusculas, int& minusculas, int& palabras, int& sentencias, int& ignorado){
 
 	static bool finPalabra = false;
 
@@ -126,9 +125,6 @@ void AuditarCaracter(char caracter, int& mayusculas, int& minusculas, int& digit
 		case MINUSCULAS: minusculas++;
 						 finPalabra = false;
 						 break;
-		case DIGITO: digitos++;
-					 finPalabra = false;
-					 break;
 		case EOW: if(!finPalabra){
 						palabras++;
 						finPalabra = true;
@@ -142,9 +138,9 @@ void AuditarCaracter(char caracter, int& mayusculas, int& minusculas, int& digit
 
 }//end AuditarCaracter
 
-void CrearTabla (ofstream& tabla, int mayusculas, int minusculas, int digitos, int palabras, int sentencias, int ignorado){
+void CrearTabla (ofstream& tabla, int mayusculas, int minusculas, int palabras, int sentencias, int ignorado){
 
-	int totalAlphaNumerico = mayusculas + minusculas + digitos;
+	int totalAlphaNumerico = mayusculas + minusculas;
 
 	// Guardamos los datos en el archivo.
 
@@ -152,7 +148,6 @@ void CrearTabla (ofstream& tabla, int mayusculas, int minusculas, int digitos, i
 	tabla << "Número de caracteres alfanuméricos: " << totalAlphaNumerico << endl;
 	tabla << "Número total de caracteres en mayúsculas: " << mayusculas << endl;
 	tabla << "Número total de caracteres en minúsculas: " << minusculas << endl;
-	tabla << "Número total de dígitos: " << digitos << endl;
 	tabla << "Número total de ignorados: " << ignorado << endl;
 
 	palabras += sentencias;
