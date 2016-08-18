@@ -1,165 +1,143 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <string>
 
 using namespace std;
 
-// Declaración de funciones.
-void AbrirFicheros(ifstream& datosEntrada, ofstream& datosSalida);
-//float CalcularMedia(int const calificaciones[], int TOTAL_CALIFICACIONES);
-int CalcularMayor(int const calificaciones[], int TOTAL_CALIFICACIONES);
-int CalcularMenor(int const calificaciones[], int TOTAL_CALIFICACIONES);
-void GuardarResultados(ofstream& datosSalida, int TOTAL_CALIFICACIONES, int mayor, int menor);
-void Error();
-void Satisfactorio();
+// Declarar prototipos de función
+void OpenFiles(ifstream& inData, ofstream& outData);
+void InputGrades(int grades[], int& numGrades, ifstream& inData);
+float CalculateAverage(int const grades[], int numGrades);
+int CalculateHighest(int const grades[]);
+int CalculateLowest(int const grades[]);
+int CalculateAboveAverage(int const grades[], fl oat average);
+int CalculateBelowAverage(int const grades[], fl oat average);
+void PrintResults(ofstream& outData, int numGrades, fl oat average,
+int highest, int lowest, int aboveAverage, int belowAverage);
+int main()
+{
+	int grades[101]; 
+	int numGrades; 
+	float average; 
+	int highest; 
+	int lowest; 
+	int aboveAverage; 
 
-
-int main(){
-
-	// declaraciones
-	ifstream datosEntrada;
-	ofstream datosSalida;
-
-	AbrirFicheros(datosEntrada, datosSalida);
-
-	if (!datosEntrada || !datosSalida){
-
-		Error();
-
+	ifstream inData;
+	ofstream outData;
+	OpenFiles(inData, outData);
+	if ( !inData || !outData ){
+		cout << "Los archivos no se abrieron con éxito. " << endl;
 		return 1;
+	}
 
-	}else{
+	InputGrades(grades, numGrades, inData);
+	average = CalculateAverage(grades, numGrades);
+	highest = CalculateHighest(grades);
+	lowest = CalculateLowest(grades);
+	aboveAverage = CalculateAboveAverage(grades, average);
+	belowAverage = CalculateBelowAverage(grades, average);
+	PrintResults(outData, numGrades, average, highest, lowest,
+	aboveAverage, belowAverage);
+	inData.close();
+	outData.close();
 
-		int contador = 0;
-		int trash;
-		int calificaciones [101];
+	return 0;
+}
 
-		// Inicializamos el array
+void OpenFiles(ifstream& text, ofstream& outFile){
+	string inFileName;
+	string outFileName;
+	cout << "Introduzca el nombre del archivo que será procesado" << endl;
+	cin >> inFileName;
+	text.open(inFileName.c_str());
+	cout << "Introduzca el nombre del archivo de salida" << endl;
+	cin >> outFileName;
+	outFile.open(outFileName.c_str());
+	outFile << "Análisis de los exámenes en el archivo " << inFileName << endl << endl;
+}
 
-		for (int i = 0; i <=100; i++){
+float CalculateAverage(int const grades[], int numGrades ){
+	int sum = 0;
 
-			calificaciones[i] = 0;
+	for (int index = 0; index <= 100; index++){
+		sum = sum + grades[index] * index;
+	}
 
-		}// end for
+	return float(sum) / float(numGrades);
+}
 
-		datosEntrada >> trash;
-
-		while(datosEntrada) {
-
-			calificaciones[trash]++;
-			contador++;
-			datosEntrada >> trash;
-
-		}/// end while
-
-		//float media;
-		int mayor;
-		int menor;
-
-		//media = CalcularMedia(calificaciones, TOTAL_CALIFICACIONES);
-		mayor = CalcularMayor(calificaciones, TOTAL_CALIFICACIONES);
-		menor = CalcularMenor(calificaciones, TOTAL_CALIFICACIONES);
-		GuardarResultados(datosSalida, TOTAL_CALIFICACIONES, mayor, menor);
-		Satisfactorio();
-		datosEntrada.close();
-		datosSalida.close();
-
-		return 0;
-	}// end if
-
+void InputGrades(int grades[], int& numGrades, ifstream& inData){
+	int grade;
 	
-}// end main
+	for (int index = 0; index <= 100; index++){
+		
+		grades[index] = 0;
+	}
+	numGrades = 0;
+	
+	inData >> grade; 
 
-// Funciones
+	while (inData)
+	{ 
+		grades[grade]++;
+		numGrades++;
+		inData >> grade;
+	}
+}
 
-void AbrirFicheros(ifstream& datosEntrada, ofstream& datosSalida){
+int CalculateHighest(int const grades[]){
+	int highGrade = 100;
 
-	string inputFile;
-	string outputFile;
+	while (grades[highGrade] == 0){
 
-	cout << "Introduzca el nombre del archivo de donde leer las calificaciones: ";
-	cin >> inputFile;
-	datosEntrada.open(inputFile.c_str());
+		highGrade--;
+	}
+	
+	return highGrade;
+}
 
-	cout << "Introduzca el nombre del fichero en el cual se guardarán las estadísticas: ";
-	cin >> outputFile;
-	datosSalida.open(outputFile.c_str());
-	datosSalida << "Análisis de los exámenes." << endl;
+int CalculateLowest(int const grades[]){
+	int lowGrade = 0;
 
+	while (grades[lowGrade] == 0){
+		
+		lowGrade++;
+	}
 
-}// end AbrirFicheros
+	return lowGrade;
+}
 
+int CalculateAboveAverage(int const grades[], float average) {
+	int averagePlus = (int)(average) + 1;
+	int index;
+	int number = 0;
+	for (index = averagePlus; index <= 100; index++){
+		
+		number = number + grades[index];
+	}
 
-/*
-float CalcularMedia(int calificaciones[], int TOTAL_CALIFICACIONES){
+	return number;
+}
 
-	float total = 0;
+int CalculateBelowAverage(int const grades[], float average){
+	int truncatedAverage = (int) (average);
+	int index;
+	int number = 0;
+	for (index = 0; index <= truncatedAverage; index++){
 
-	for (int i = 0 ; i < TOTAL_CALIFICACIONES; i++){
+		number = number + grades[index];
+	}
+		
+	return number;
+}
 
-		total += calificaciones[i];
+void PrintResults(ofstream& outData, int numGrades, float average, int highest, int lowest, int aboveAverage, int belowAverage){
 
-	}//end for
-
-	return float(total /= TOTAL_CALIFICACIONES);
-
-}// end CalcularMedia
-*/
-
-int CalcularMayor(int const calificaciones[], int TOTAL_CALIFICACIONES){
-
-	int mayorNota = 0;
-
-	for (int i = 0; i < TOTAL_CALIFICACIONES; i++){
-
-		/*if (calificaciones[i] > mayorNota){
-
-			mayorNota = calificaciones[i];
-		}// en if
-		*/
-
-	}// end for
-
-	return mayorNota;
-
-}//end CaluclarMayor
-
-int CalcularMenor(int const calificaciones[], int TOTAL_CALIFICACIONES){
-
-	int menorNota= 99999;
-
-	for(int i = 0; i < TOTAL_CALIFICACIONES; i++){
-
-		if (calificaciones[i] < menorNota){
-
-			menorNota = calificaciones[i];
-		}// end if
-
-	}// end for
-
-	return menorNota;
-
-}// end CalcularMenor
-
-void GuardarResultados(ofstream& datosSalida, int TOTAL_CALIFICACIONES, int mayor, int menor){
-
-	datosSalida << "El número total de calificaciones es: " << TOTAL_CALIFICACIONES << endl;
-	//datosSalida << "La media de las calif,icaciones es: " << fixed << setprecision(2) << media << endl;
-	datosSalida << "La nota mayor es: " << mayor << endl;
-	datosSalida << "La nota más baja es: " << menor << endl;
-
-
-}// end GuardarResultados
-
-void Error(){
-
-	cout << "Error al abrir uno o ambos ficheros." << endl;
-
-}// end error
-
-void Satisfactorio(){
-
-	cout << "El proceso se ha terminado correctamente, revise el fichero con los resultados." << endl;
-
-}// end Satisfactorio
+	outData << "El número de calificaciones es " << numGrades << endl;
+	outData << fi xed << setprecision(2) << "La calificación promedio es " << average << endl;
+	outData << "La califi cación más alta es " << highest << endl;
+	outData << "La califi cación mínima es " << lowest << endl;
+	outData << "El número de calificaciones arriba del promedio es "<< aboveAverage << endl;
+	outData << "El número de calificaciones abajo del promedio es "<< belowAverage << endl;
+}
