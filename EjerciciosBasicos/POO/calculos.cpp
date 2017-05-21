@@ -9,7 +9,8 @@ int main()
   std::cin>> base;
   std::cout<< "Escriba la altura del triangulo: ";
   std::cin>> altura;
-  Triangulo t;
-  std::cout<<"El resultado es: "<< t.calculo(base,altura)<<std::endl;
+  Triangulo *t = new Triangulo();
+  std::cout<<"El resultado es: "<< t->calculo(base,altura)<<std::endl;
+  delete t;
   return 0;
 }

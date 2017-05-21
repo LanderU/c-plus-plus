@@ -1,3 +1,5 @@
+#include <iostream>
+
 class Triangulo{
   private:
     double _resultado;
@@ -7,4 +9,7 @@ class Triangulo{
       _resultado = (l*a)/2;
       return _resultado;
     }
+    ~Triangulo(){
+      std::cout<<"Borrando el objeto"<<std::endl;
+    };
 };
